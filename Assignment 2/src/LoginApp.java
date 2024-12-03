@@ -16,7 +16,7 @@ public class LoginApp extends JFrame {
 
     public LoginApp() {
 
-        System.out.println("LoginApp has started!");
+        System.out.println("Test");
         setTitle("Login Screen");
         setSize(350, 200);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

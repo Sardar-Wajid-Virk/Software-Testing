@@ -1,4 +1,4 @@
-import static org.junit.jupiter.api.Assertions.*;
+/*import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 class LoginAppTest {
@@ -76,6 +76,67 @@ class LoginAppTest {
 
         Exception exception = assertThrows(RuntimeException.class, () -> {
             faultyLoginApp.authenticateUser("johndoe@example.com", "password123");
+        });
+        assertEquals("Database connection failed.", exception.getMessage(), "Should throw a database connection failure exception.");
+    }
+}
+*/
+
+
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
+
+import java.sql.*;
+
+class LoginAppTest {
+    private LoginApp loginApp;
+
+    @BeforeEach
+    void setUp() {
+        loginApp = new LoginApp();
+    }
+
+    @Test
+    void testSuccessfulLogin() {
+        String email = "johndoe@example.com";
+        String result = loginApp.authenticateUser(email);
+        assertEquals("John Doe", result, "Login should succeed with a valid email.");
+    }
+
+    @Test
+    void testInvalidEmail() {
+        String email = "invalidemail@example.com";
+        String result = loginApp.authenticateUser(email);
+        assertNull(result, "Login should fail with an invalid email.");
+    }
+
+    @Test
+    void testEmptyEmailField() {
+        String email = "";
+        String result = loginApp.authenticateUser(email);
+        assertNull(result, "Login should fail with an empty email field.");
+    }
+
+    @Test
+    void testNullEmail() {
+        String result = loginApp.authenticateUser(null);
+        assertNull(result, "Login should fail when email is null.");
+    }
+
+    @Test
+    void testDatabaseConnectionFailure() {
+        // Simulate a database connection failure by using incorrect credentials
+        LoginApp faultyLoginApp = new LoginApp() {
+            @Override
+            String authenticateUser(String email) {
+                // Override to simulate database failure
+                throw new RuntimeException("Database connection failed.");
+            }
+        };
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            faultyLoginApp.authenticateUser("johndoe@example.com");
         });
         assertEquals("Database connection failed.", exception.getMessage(), "Should throw a database connection failure exception.");
     }
